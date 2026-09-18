@@ -1,5 +1,8 @@
 import math
+
+
 def golden_section_search(x0, y0, f, a, b, tolerance=1e-7):
+    # a and b should be chosen inside the domain of f
     phi = (1 + math.sqrt(5)) / 2
     resphi = 2 - phi
     x1 = a + resphi * (b - a)
