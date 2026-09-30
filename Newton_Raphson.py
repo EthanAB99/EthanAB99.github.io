@@ -19,6 +19,7 @@ def find_distance_newton(x0, y0, f, df=None, ddf=None, initial_guess=0.0,
                           + 2 * (f(x) - y0) * f_double_prime)
 
         # Newton-Raphson update step
+        # Replace the Newton update
         next_x = x - D_prime / D_double_prime
         if abs(next_x - x) < tolerance:
             x = next_x
