@@ -81,129 +81,83 @@
 <p class="note">Results from <a href="comparison.csv">comparison.csv</a>. Each update changes one coefficient: 90 updates are 45 line sweeps; 1,521 updates are 507 parabola sweeps.</p>
 <figure><a href="fit_comparison.png"><img src="fit_comparison.png" width="2880" height="1620" alt="Six-panel figure showing line and parabola fits, error convergence, and intermediate curves." loading="lazy"></a><figcaption>Line and parabola fits, MSE histories, and intermediate curves. <a href="fit_comparison.pdf">View the original PDF figure.</a></figcaption></figure>
 </section>
-<section id="discussion"><h2>Discussion</h2>
-<p>The notebook notes focus on the effect of the starting estimate and the function’s domain:</p>
-<ul><li><strong>Reciprocal:</strong> the asymptote at x = 0 caused problems with the search bounds. The two branches need separate intervals that do not cross zero, followed by a comparison of their candidate distances.</li><li><strong>Logarithmic:</strong> the initial guess needed to be moved away from zero so that the function and its derivatives could be evaluated. All evaluations must remain at x &gt; 0.</li><li><strong>Square root:</strong> the search needed to stay in the nonnegative domain. Newton’s derivatives require x &gt; 0; the endpoint x = 0 can be checked separately.</li><li><strong>Exponential:</strong> the notes report difficulties at extreme values and improvement after adjusting the search settings.</li></ul>
-<p>Both methods were sensitive to their setup in these experiments. Checking the curve’s shape helped with choosing the initial estimate or bounds and checking whether the result was reasonable; the notebook records using Symbolab for this check. A small change between iterations alone does not confirm a global minimum.</p>
-<p>The notes also describe apparent performance changes for points farther from the curve. That observation would need a separate comparison of iteration counts and errors to measure it. A tighter tolerance or more iterations can improve numerical accuracy, at the cost of more computation.</p>
-<p>For Part 2, the parabola has a smaller fitting error than the line: 0.0125 compared with 0.575. The sequential parabola fit takes more coefficient updates in the supplied CSVs. The numerical coefficients approach the values found analytically.</p>
+<section id="discussion">
+  <h2>Discussion</h2>
+  <p>
+    In Part 1, I found that the starting estimate and search bounds had a large
+    effect on whether the numerical methods gave a reasonable result.
+  </p>
+  <ul>
+    <li>
+      <strong>Reciprocal:</strong> I ran into problems with the search bounds
+      because 1/x has an asymptote at x = 0. I had to consider both branches
+      when checking the result. To compare their minima, the branches need
+      separate search intervals that do not cross zero.
+    </li>
+    <li>
+      <strong>Logarithmic:</strong> I had to move the initial guess away from
+      zero so that the function and its derivatives could be evaluated. The
+      iterates need to stay at x &gt; 0.
+    </li>
+    <li>
+      <strong>Square root:</strong> I restricted the golden-section search to
+      the nonnegative domain. For Newton–Raphson, I added a
+      <code>lower_bound</code> parameter to prevent updates from moving into
+      negative x-values. This helped with input points whose x-coordinates
+      were negative: the closest point on the curve is at the endpoint
+      x = 0. A small positive bound approximates that endpoint while avoiding
+      the undefined derivatives at zero.
+    </li>
+    <li>
+      <strong>Exponential:</strong> I had trouble with the search at extreme
+      values. Adjusting the search bounds improved the results.
+    </li>
+  </ul>
+  <p>
+    I found that both methods were sensitive to their setup and could give
+    incorrect results even when the output appeared reasonable. I used
+    Symbolab to check the shape of the functions and help judge whether the
+    numerical solutions made sense. This made it easier to choose suitable
+    initial guesses and search intervals.
+  </p>
+  <p>
+    In my analytical-versus-Newton–Raphson comparison, I noticed a discrepancy
+    with a similar pattern to the bisection results. The difference appeared
+    to increase as the points moved farther from the origin (increasing
+    radius), which made me more cautious about results at the outer points
+    and near domain boundaries. I would test a tighter tolerance and more
+    iterations to see whether additional computation improves accuracy.
+    Before attributing the difference to numerical convergence, I need to
+    verify the analytical reference values and compare results for the same
+    function. The apparent trend alone does not establish that more
+    computation will remove the discrepancy.
+  </p>
+  <figure id="analytical-nr-error">
+    <a href="plots/Error%20of%20Analytical%20vs%20NR.png">
+      <img src="plots/Error%20of%20Analytical%20vs%20NR.png"
+           width="640" height="480" loading="lazy"
+           alt="Bar chart of the recorded analytical-versus-Newton–Raphson distance differences for the five input points.">
+    </a>
+    <figcaption>Error of Analytical vs NR — original comparison plot for Part 1.</figcaption>
+  </figure>
+  <p>
+    Part 2 went more smoothly. I needed some research to understand the
+    analytical matrix calculations and the numerical update procedure, but
+    did not encounter major issues. The early fitted curves looked irregular
+    and did not match the data well. As I continued updating the coefficients,
+    the numerical results approached the analytical solution closely.
+  </p>
+  <p>
+    I obtained an MSE of 0.575 for the line and 0.0125 for the parabola. The
+    parabola fit these four points more closely, although its sequential
+    solution required more coefficient updates: 1,521 compared with 90 for
+    the line.
+  </p>
 </section>
+
 <section id="resources"><h2>Code and files</h2>
 <div class="files"><a href="assignment1.ipynb" download>Original experiment notebook <span>IPYNB ↓</span></a><a href="Bisection.py" download>Golden-section implementation <span>PY ↓</span></a><a href="Newton_Raphson.py" download>Newton–Raphson implementation <span>PY ↓</span></a><a href="comparison.csv" download>Final model comparison <span>CSV ↓</span></a><a href="line_iterations.csv" download>Line: all 90 updates + initial state <span>CSV ↓</span></a><a href="quadratic_iterations.csv" download>Quadratic: all 1,521 updates + initial state <span>CSV ↓</span></a><a href="fit_comparison.pdf">Original fitting figure <span>PDF ↗</span></a><a href="README.md">Repository README <span>MD ↗</span></a></div>
-<div class="actions"><button class="button primary" id="download-code" type="button">Download reproducible Python ↓</button><a class="button" href="https://github.com/EthanAB99/EthanAB99.github.io">View repository ↗</a></div>
-
-<details data-print><summary>Additional Python example: distance methods and curve fitting</summary><p class="note">Requires Python and NumPy. Saves new CSVs with the prefix “reproduced_” so the original data stays intact. Uses a maximum coefficient change of 10⁻⁸ over a complete sweep as its fitting stop criterion; update counts may differ from the original exports.</p><pre><code id="python-source">&quot;&quot;&quot;SYDE 572: reproducible distance and sequential Newton fitting examples.
-Requires numpy. Run: python assignment1_reproduce.py
-The two original distance routines remain available separately on the webpage.
-&quot;&quot;&quot;
-import math
-import csv
-import numpy as np
-
-
-def golden(x0, y0, f, a, b, tol=1e-7):
-    # Use a continuous, unimodal objective on [a, b].
-    ratio = (3 - math.sqrt(5)) / 2
-    D = lambda x: (x-x0)**2 + (f(x)-y0)**2
-    left, right = a + ratio*(b-a), b - ratio*(b-a)
-    fl, fr = D(left), D(right)
-    history = []
-    while b-a &gt; tol:
-        history.append((a, b, left, right, fl, fr))
-        if fl &lt; fr:
-            b, right, fr = right, left, fl
-            left = a + ratio*(b-a)
-            fl = D(left)
-        else:
-            a, left, fl = left, right, fr
-            right = b - ratio*(b-a)
-            fr = D(right)
-    x = (a+b)/2
-    return x, math.sqrt(D(x)), history
-
-
-def newton(x0, y0, f, df, ddf, start=0., tol=1e-7):
-    x, history = start, []
-    for k in range(100):
-        g = 2*(x-x0) + 2*(f(x)-y0)*df(x)
-        H = 2 + 2*df(x)**2 + 2*(f(x)-y0)*ddf(x)
-        history.append((k, x, math.hypot(x-x0, f(x)-y0)))
-        if abs(H) &lt; 1e-14:
-            raise ValueError(&quot;Near-zero curvature: change the starting point.&quot;)
-        nxt = x-g/H
-        if not math.isfinite(nxt):
-            raise ValueError(&quot;Non-finite Newton step.&quot;)
-        if abs(nxt-x) &lt; tol:
-            x = nxt
-            if abs(2*(x-x0)+2*(f(x)-y0)*df(x)) &gt; 1e-6:
-                raise ValueError(&quot;Small step without a stationary point.&quot;)
-            return x, math.hypot(x-x0, f(x)-y0), history
-        x = nxt
-    raise RuntimeError(&quot;Newton did not converge; check domain and initial guess.&quot;)
-
-
-def fit(degree, filename, tol=1e-8):
-    x = np.array([0., 2., 1., 3.])
-    y = np.array([.5, 3.5, 1.5, 7.5])
-    A = np.column_stack([x**j for j in range(degree+1)])
-    theta = np.zeros(degree+1)  # c, b, then a
-    labels = [&#x27;c&#x27;, &#x27;b&#x27;, &#x27;a&#x27;][:degree+1]
-    mse = lambda: float(np.mean((A@theta-y)**2))
-    rows = [[0, &#x27;initial&#x27;, *theta, mse()]]
-    for cycle in range(100000):
-        old = theta.copy()
-        for j in range(degree+1):
-            residual = A@theta-y
-            gradient = 2*np.mean(A[:, j]*residual)
-            curvature = 2*np.mean(A[:, j]**2)
-            theta[j] -= gradient/curvature
-            rows.append([len(rows), labels[j], *theta, mse()])
-        if max(abs(theta-old)) &lt; tol:
-            break
-    else:
-        raise RuntimeError(&#x27;Coordinate Newton did not converge.&#x27;)
-    exact = np.linalg.solve(A.T@A, A.T@y)
-    assert np.allclose(theta, exact, atol=1e-6)
-    with open(filename, &#x27;w&#x27;, newline=&#x27;&#x27;) as out:
-        writer = csv.writer(out)
-        writer.writerow([&#x27;update&#x27;, &#x27;variable_updated&#x27;, *labels, &#x27;MSE&#x27;])
-        writer.writerows(rows)
-    print(&#x27;degree&#x27;, degree, &#x27;analytical&#x27;, exact, &#x27;numerical&#x27;, theta,
-          &#x27;MSE&#x27;, mse(), &#x27;individual updates&#x27;, len(rows)-1)
-
-
-if __name__ == &#x27;__main__&#x27;:
-    for p in [0, -4, -8, 2, 6]:
-        u = np.cbrt(p/4 + np.sqrt(p*p/16 + (11/6)**3))
-        v = np.cbrt(p/4 - np.sqrt(p*p/16 + (11/6)**3))
-        exact = float(u+v)
-        g = golden(p, 0, lambda x: x*x+5, -10, 10)
-        n = newton(p, 0, lambda x: x*x+5, lambda x: 2*x, lambda x: 2.)
-        print(&#x27;point&#x27;, (p, 0), &#x27;exact x&#x27;, exact, &#x27;golden&#x27;, g[:2], &#x27;Newton&#x27;, n[:2])
-        assert abs(g[1]-n[1]) &lt; 1e-9
-    examples = [
-        (&#x27;exp&#x27;, math.exp, math.exp, math.exp, -5, 2, 0),
-        (&#x27;log&#x27;, math.log, lambda x: 1/x, lambda x: -1/x**2, .01, 5, 1),
-        (&#x27;reciprocal&#x27;, lambda x: 1/x, lambda x: -1/x**2,
-         lambda x: 2/x**3, .01, 5, 2),
-        (&#x27;sqrt&#x27;, math.sqrt, lambda x: .5/math.sqrt(x),
-         lambda x: -.25/x**1.5, .00001, 5, 1),
-    ]
-    for name, f, df, ddf, lo, hi, start in examples:
-        g = golden(2, 0, f, lo, hi)
-        n = newton(2, 0, f, df, ddf, start)
-        # Compare disconnected reciprocal branches and the radical endpoint.
-        candidates = [g[:2]]
-        if name == &#x27;reciprocal&#x27;:
-            candidates.append(golden(2, 0, f, -5, -.01)[:2])
-        if name == &#x27;sqrt&#x27;:
-            candidates.append((0., 2.))
-        best = min(candidates, key=lambda item: item[1])
-        print(name, &#x27;point (2,0)&#x27;, &#x27;best&#x27;, best, &#x27;Newton&#x27;, n[:2])
-        assert abs(best[1]-n[1]) &lt; 1e-8
-    fit(1, &#x27;reproduced_line_iterations.csv&#x27;)
-    fit(2, &#x27;reproduced_quadratic_iterations.csv&#x27;)
-</code></pre></details>
+<div class="actions"><a class="button" href="https://github.com/EthanAB99/EthanAB99.github.io">View repository ↗</a></div>
 
 <details><summary>Original plot archive · all existing PNG files</summary><p>Original figures from the notebook experiments.</p><div class="files archive"><a href="Bisection%20code_inverse_x.png">Bisection code_inverse_x.png<span>↗</span></a><a href="Bisection_logarithmic.png">Bisection_logarithmic.png<span>↗</span></a><a href="analytical.png">analytical.png<span>↗</span></a><a href="fit_comparison.png">fit_comparison.png<span>↗</span></a><a href="plots/Bisection%20code_exponential.png">plots/Bisection code_exponential.png<span>↗</span></a><a href="plots/Bisection%20code_first%20function.png">plots/Bisection code_first function.png<span>↗</span></a><a href="plots/Bisection%20code_inverse_x.png">plots/Bisection code_inverse_x.png<span>↗</span></a><a href="plots/Bisection%20code_inverse_x_issue.png">plots/Bisection code_inverse_x_issue.png<span>↗</span></a><a href="plots/Bisection%20code_logarithmic_issue.png">plots/Bisection code_logarithmic_issue.png<span>↗</span></a><a href="plots/Bisection%20code_root_issue.png">plots/Bisection code_root_issue.png<span>↗</span></a><a href="plots/Bisection_logarithmic.png">plots/Bisection_logarithmic.png<span>↗</span></a><a href="plots/Bisection_square_root.png">plots/Bisection_square_root.png<span>↗</span></a><a href="plots/Error%20of%20Analytical%20vs%20NR.png">plots/Error of Analytical vs NR.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_first%20function.png">plots/Newton-Raphson Method_first function.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_inverse_x.png">plots/Newton-Raphson Method_inverse_x.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_logarithmic.png">plots/Newton-Raphson Method_logarithmic.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_logarithmic_issue.png">plots/Newton-Raphson Method_logarithmic_issue.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_root.png">plots/Newton-Raphson Method_root.png<span>↗</span></a><a href="plots/Newton-Raphson%20Method_root_issue.png">plots/Newton-Raphson Method_root_issue.png<span>↗</span></a><a href="plots/Newton-Raphson_exponential.png">plots/Newton-Raphson_exponential.png<span>↗</span></a><a href="plots/analytical.png">plots/analytical.png<span>↗</span></a><a href="plots/sampling.png">plots/sampling.png<span>↗</span></a><a href="plots/sampling_fixed.png">plots/sampling_fixed.png<span>↗</span></a></div></details>
 
@@ -243,7 +197,6 @@ function drawStatic(){
 function drawFit(){const model=document.getElementById('model').value,rows=data[model],slider=document.getElementById('iteration');slider.max=rows.length-1;let r=rows[Number(slider.value)];document.getElementById('update-number').textContent=`${r.update} / ${rows.length-1}`;const c=chart('fit-chart',-.2,3.2,-1,9,'x','y');const f=x=>r.c+r.b*x+(r.a||0)*x*x;const exact=model==='line'?x=>-.2+2.3*x:x=>.55+.05*x+.75*x*x;c.line(curve(exact,0,3),colors.green,2,[5,4]);c.line(curve(f,0,3),colors.blue,2);[[0,.5],[1,1.5],[2,3.5],[3,7.5]].forEach(p=>c.dot(...p,colors.orange,4));document.getElementById('fit-status').textContent=`c = ${r.c.toFixed(6)} · b = ${r.b.toFixed(6)}${model==='quad'?' · a = '+r.a.toFixed(6):''} · MSE = ${r.MSE.toFixed(6)} · updated: ${r.variable_updated}`;}
 document.getElementById('model').addEventListener('change',()=>{const slider=document.getElementById('iteration');slider.max=data[document.getElementById('model').value].length-1;slider.value=slider.max;drawFit();});
 document.getElementById('iteration').addEventListener('input',drawFit);
-document.getElementById('download-code').addEventListener('click',()=>{const blob=new Blob([document.getElementById('python-source').textContent],{type:'text/x-python'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='assignment1_reproduce.py';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
 let printState=[];function preparePrint(){printState=Array.from(document.querySelectorAll('details[data-print]')).map(d=>[d,d.open]);printState.forEach(([d])=>d.open=true);drawStatic();}
 window.addEventListener('beforeprint',preparePrint);window.addEventListener('afterprint',()=>{printState.forEach(([d,open])=>d.open=open);drawStatic();});document.getElementById('print-report').addEventListener('click',()=>window.print());
 let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(drawStatic,100);});drawStatic();
