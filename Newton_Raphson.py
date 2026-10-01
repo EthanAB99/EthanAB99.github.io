@@ -1,6 +1,9 @@
 def find_distance_newton(x0, y0, f, df=None, ddf=None, initial_guess=0.0,
-                         tolerance=1e-7, max_iter=100):
+                         tolerance=1e-7, max_iter=100, lower_bound=None):
     x = initial_guess
+    # Keep the starting value at or above the optional lower bound.
+    if lower_bound is not None:
+        x = max(x, lower_bound)
 
     for _ in range(max_iter):
         # Estimate the derivatives if they were not provided
@@ -19,8 +22,10 @@ def find_distance_newton(x0, y0, f, df=None, ddf=None, initial_guess=0.0,
                           + 2 * (f(x) - y0) * f_double_prime)
 
         # Newton-Raphson update step
-        # Replace the Newton update
         next_x = x - D_prime / D_double_prime
+        # Keep each new estimate at or above the same bound.
+        if lower_bound is not None:
+            next_x = max(next_x, lower_bound)
         if abs(next_x - x) < tolerance:
             x = next_x
             break
