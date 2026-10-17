@@ -103,7 +103,7 @@
       <p>I expanded the range to see if the trend continues, and it seems to break at both extremes. The optimal regularization is 0.01.</p>
       <figure><a href="assets/polynomial-regularization.png"><img src="assets/polynomial-regularization.png" alt="Average ten-fold validation RMS versus regularization constant for the degree-eight polynomial model." loading="lazy"></a><figcaption>λ = 0 is shown as a horizontal baseline because zero cannot appear on the logarithmic x-axis.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>λ</th><th>Average validation RMS</th></tr></thead><tbody>
-        <tr><td>0</td><td>12.420</td></tr><tr><td>0.01</td><td>5.806</td></tr><tr><td>0.1</td><td>8.779</td></tr><tr><td>1</td><td>9.658</td></tr><tr><td>10</td><td>10.216</td></tr><tr><td>100</td><td>9.316</td></tr><tr><td>1000</td><td>6.902</td></tr>
+        <tr><td>0</td><td>12.420</td></tr><tr><td>0.001</td><td>8.273</td></tr><tr><td>0.01</td><td>5.806</td></tr><tr><td>0.1</td><td>8.779</td></tr><tr><td>1</td><td>9.658</td></tr><tr><td>10</td><td>10.216</td></tr><tr><td>100</td><td>9.316</td></tr><tr><td>1000</td><td>6.902</td></tr><tr><td>10000</td><td>5.973</td></tr>
       </tbody></table></div>
     </section>
 
@@ -124,7 +124,7 @@
       <p>These plots demonstrate that regularization can meaningfully decrease our model’s error and improve its generalizability. By penalizing complexity, we guide the model toward simpler estimators that should transfer better from training to test data instead of only improving performance on the training set. The lowest average validation RMS is at <strong>λ = 0.01</strong>.</p>
       <figure><a href="assets/gaussian-regularization.png"><img src="assets/gaussian-regularization.png" alt="Average ten-fold validation RMS versus L2 regularization constant for the 90-basis Gaussian model." loading="lazy"></a><figcaption>λ = 0 is shown as a horizontal baseline; positive λ values are on a logarithmic x-axis.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>λ</th><th>Average validation RMS</th></tr></thead><tbody>
-        <tr><td>0</td><td>9.218</td></tr><tr><td>0.01</td><td>1.815</td></tr><tr><td>0.1</td><td>2.045</td></tr><tr><td>1</td><td>2.562</td></tr><tr><td>10</td><td>3.192</td></tr><tr><td>100</td><td>4.352</td></tr><tr><td>1000</td><td>5.454</td></tr>
+        <tr><td>0</td><td>9.218</td></tr><tr><td>0.001</td><td>1.875</td></tr><tr><td>0.01</td><td>1.815</td></tr><tr><td>0.1</td><td>2.045</td></tr><tr><td>1</td><td>2.562</td></tr><tr><td>10</td><td>3.192</td></tr><tr><td>100</td><td>4.352</td></tr><tr><td>1000</td><td>5.454</td></tr><tr><td>10000</td><td>5.667</td></tr>
       </tbody></table></div>
     </section>
 
