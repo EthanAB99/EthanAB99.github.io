@@ -81,7 +81,7 @@
       <div class="equation">ŷ = w₀ + Σᵢ Σₚ wᵢₚ zᵢᵖ, &nbsp; where zᵢ is a standardized feature and p = 1, …, degree.</div>
 
       <h3>(a) Error versus polynomial degree</h3>
-      <p>Training RMS decreases as degree increases, while test RMS rises sharply. The higher-degree model fits the first 100 rows more closely but generalizes poorly to the remaining rows; the degree-1 model has the lowest test error in this run.</p>
+      <p>The training error decreases as we increase the polynomial degree this is very intuitive because as we increase the power we get more degrees of freedom to fit to our training data making it much easier to fit obscure data. However, this relationship is inversely true for testing error. This is because while our higher order polynomials clearly fit some training data better they have no generalizabillity and have error on the order of quintillion (10^15 * thousands) dollars which is more money than there is on earth making its predictive value incredibly poor. Our linear model actual has the optimal predictive value for this data.</p>
       <figure><a href="assets/polynomial-errors.png"><img src="assets/polynomial-errors.png" alt="Training and test RMS error by polynomial degree, plotted on a logarithmic vertical axis." loading="lazy"></a><figcaption>Training and test RMS for degrees 1–7. The logarithmic vertical scale makes the large test-error increase visible.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>Degree</th><th>Training RMS</th><th>Test RMS</th></tr></thead><tbody>
         <tr><td>1</td><td>2.037</td><td>36.445</td></tr><tr><td>2</td><td>1.578</td><td>1,097.188</td></tr><tr><td>3</td><td>1.449</td><td>48,672.820</td></tr><tr><td>4</td><td>1.270</td><td>21,859,680</td></tr><tr><td>5</td><td>1.097</td><td>18,358,030,000</td></tr><tr><td>6</td><td>1.073</td><td>5,024,089,000,000</td></tr><tr><td>7</td><td>0.881</td><td>6.879 × 10¹⁵</td></tr>
@@ -93,7 +93,8 @@
         <tr><td>w₀</td><td>Bias</td><td>0.000000</td></tr>
         <tr><td>w₁</td><td>CRIM</td><td>-0.226842</td></tr><tr><td>w₂</td><td>ZN</td><td>0.020853</td></tr><tr><td>w₃</td><td>INDUS</td><td>-0.090038</td></tr><tr><td>w₄</td><td>CHAS</td><td>0.000000</td></tr><tr><td>w₅</td><td>NOX</td><td>0.169991</td></tr><tr><td>w₆</td><td>RM</td><td>0.711335</td></tr><tr><td>w₇</td><td>AGE</td><td>-0.367274</td></tr><tr><td>w₈</td><td>DIS</td><td>0.001817</td></tr><tr><td>w₉</td><td>RAD</td><td>-0.032853</td></tr><tr><td>w₁₀</td><td>TAX</td><td>-0.059107</td></tr><tr><td>w₁₁</td><td>PTRATIO</td><td>0.044295</td></tr><tr><td>w₁₂</td><td>B</td><td>0.030699</td></tr><tr><td>w₁₃</td><td>LSTAT</td><td>0.025221</td></tr>
       </tbody></table></div>
-      <div class="callout"><strong>Requested feature weights:</strong> RM (6th feature) has weight <strong>0.711335</strong>; DIS (8th feature) has weight <strong>0.001817</strong>. RM’s positive standardized coefficient indicates a stronger positive association in this fitted linear model. DIS’s coefficient is close to zero. These values are not dollars per raw feature unit because both inputs and target were standardized.</div>
+      <p>The weights both make sense. weight 6(number of rooms per dwelling) being quite positive makes sense since in general a house with more rooms is worth more and can fit more inhabitants. Input 8(weighted distance to 5 boston employment centers) being positive also makes sense however, it's weight is extrememly small which is reasonable since in my experience, most people pick houses for other amenities first before picking for distance to employment centers (if anyone even looks at this). So while it may have a slight uptick in home prices simply due to proximity to higher money availability the results are not super strong correlation between x8 and the home price. The scale simply makes sure all the model predictions are consistent and are not dominated by inputs with larger absolute values. This is because RMS will give higher predictive power to higher magnitude values.</p>
+      <p class="note">Scale clarification: standardization puts features on comparable units; RMS measures prediction error and does not give higher predictive power to larger-magnitude inputs.</p>
 
       <h3>(c) One-feature polynomial curves</h3>
       <p>The notebook’s selected feature is <code>INDUS</code> (the third column, selected with <code>X_train[:, 2]</code>). The figure shows the training points, test points, and fitted curves for degrees 1, 3, and 7.</p>
@@ -101,7 +102,7 @@
       <p class="note">The assignment describes the second feature; the current notebook selection is the third feature, INDUS. The figure reflects the notebook code as saved.</p>
 
       <h3>(d) L2 regularization with cross-validation</h3>
-      <p>A degree-8 polynomial is fit using only <code>ZN</code>. Ten-fold cross-validation runs on the first 100 rows; the 406 test rows are not used to select λ. The lowest average validation RMS in this run is at <strong>λ = 0.01</strong>.</p>
+      <p>I expanded the range to see if the trend continues and it seems to break at both extrema. The oprimal regularization is 0.01</p>
       <figure><a href="assets/polynomial-regularization.png"><img src="assets/polynomial-regularization.png" alt="Average ten-fold validation RMS versus regularization constant for the degree-eight polynomial model." loading="lazy"></a><figcaption>λ = 0 is shown as a horizontal baseline because zero cannot appear on the logarithmic x-axis.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>λ</th><th>Average validation RMS</th></tr></thead><tbody>
         <tr><td>0</td><td>12.420</td></tr><tr><td>0.01</td><td>5.806</td></tr><tr><td>0.1</td><td>8.779</td></tr><tr><td>1</td><td>9.658</td></tr><tr><td>10</td><td>10.216</td></tr><tr><td>100</td><td>9.316</td></tr><tr><td>1000</td><td>6.902</td></tr>
@@ -112,17 +113,17 @@
       <h2>Part 2 · Gaussian basis functions</h2>
       <p>Each Gaussian basis function responds to the distance from one selected training-row center. Linear regression then learns weights over those basis responses.</p>
       <div class="equation">φⱼ(x) = exp(−‖z − cⱼ‖² / (2σ²)), &nbsp; prediction = w₀ + Σⱼ wⱼ φⱼ(x).</div>
-      <p>All 13 features are used. Inputs are standardized using training statistics before distances are computed; centers are selected from training rows. Because the assignment brief does not give a width, the implementation uses the median pairwise distance among standardized training rows for σ.</p>
+      <p>This uses all 13 input features. The Gaussian width is set to the median pairwise distance between standardized training rows because the assignment does not specify a width.</p>
 
       <h3>(e) Error versus number of Gaussian bases</h3>
-      <p>Training RMS falls as more basis functions are added. Test RMS improves at first, then jumps at 85 and 95 bases, showing that the unregularized model becomes sensitive to the training data at high basis counts.</p>
+      <p>Test error starts to epxlode after 75 basis functions. this is a similar to what we saw originally where giving any model excess degrees of freedom will actually hurt it's performance (comparable to higher dimension polynomials). However, the overall error is quite good for these models and seems best in the 15-35 range.</p>
       <figure><a href="assets/gaussian-errors.png"><img src="assets/gaussian-errors.png" alt="Training and test RMS error versus number of Gaussian basis functions." loading="lazy"></a><figcaption>Basis counts 5, 15, …, 95. The same random ordering of training points supplies nested center sets across counts.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>Basis functions</th><th>Training RMS</th><th>Test RMS</th></tr></thead><tbody>
         <tr><td>5</td><td>3.546</td><td>13.335</td></tr><tr><td>15</td><td>2.158</td><td>9.087</td></tr><tr><td>25</td><td>1.630</td><td>7.489</td></tr><tr><td>35</td><td>1.354</td><td>7.427</td></tr><tr><td>45</td><td>1.233</td><td>10.208</td></tr><tr><td>55</td><td>1.113</td><td>9.860</td></tr><tr><td>65</td><td>1.082</td><td>13.142</td></tr><tr><td>75</td><td>0.910</td><td>7.780</td></tr><tr><td>85</td><td>0.677</td><td>102.701</td></tr><tr><td>95</td><td>0.424</td><td>197.635</td></tr>
       </tbody></table></div>
 
       <h3>(f) L2 regularization with cross-validation</h3>
-      <p>The model uses 90 Gaussian bases and all features. Ten-fold cross-validation on the first 100 rows selects <strong>λ = 0.01</strong>, the value with the lowest average validation RMS in this run.</p>
+      <p>These plots demonstrate the regularization can meaningfully decrease our models error and thus improves it generalizability. By adding penalties to updates and complexity we guide it to fit to reasonably simple estimators that will be better at moving from train to test rather than just perfecting the performance on the training set. The lowest average validation RMS is at <strong>λ = 0.01</strong>.</p>
       <figure><a href="assets/gaussian-regularization.png"><img src="assets/gaussian-regularization.png" alt="Average ten-fold validation RMS versus L2 regularization constant for the 90-basis Gaussian model." loading="lazy"></a><figcaption>λ = 0 is shown as a horizontal baseline; positive λ values are on a logarithmic x-axis.</figcaption></figure>
       <div class="table-wrap"><table><thead><tr><th>λ</th><th>Average validation RMS</th></tr></thead><tbody>
         <tr><td>0</td><td>9.218</td></tr><tr><td>0.01</td><td>1.815</td></tr><tr><td>0.1</td><td>2.045</td></tr><tr><td>1</td><td>2.562</td></tr><tr><td>10</td><td>3.192</td></tr><tr><td>100</td><td>4.352</td></tr><tr><td>1000</td><td>5.454</td></tr>
