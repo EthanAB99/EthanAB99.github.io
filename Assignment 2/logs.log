@@ -1,0 +1,32 @@
+2026-10-17 15:28:07,435:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2026-10-17 15:28:07,435:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2026-10-17 15:28:07,436:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2026-10-17 15:28:07,436:WARNING:
+'cuml' is a soft dependency and not included in the pycaret installation. Please run: `pip install cuml` to install.
+2026-10-17 15:28:08,075:INFO:PyCaret RegressionExperiment
+2026-10-17 15:28:08,075:INFO:Logging name: reg-default-name
+2026-10-17 15:28:08,075:INFO:ML Usecase: MLUsecase.REGRESSION
+2026-10-17 15:28:08,075:INFO:version 3.3.2
+2026-10-17 15:28:08,075:INFO:Initializing setup()
+2026-10-17 15:28:08,075:INFO:self.USI: 7d5a
+2026-10-17 15:28:08,075:INFO:self._variable_keys: {'idx', 'X', 'gpu_param', 'data', 'seed', 'memory', 'fold_generator', 'USI', '_available_plots', 'fold_shuffle_param', 'X_train', 'n_jobs_param', 'html_param', 'transform_target_param', 'y', 'y_test', 'target_param', '_ml_usecase', 'pipeline', 'gpu_n_jobs_param', 'exp_name_log', 'logging_param', 'y_train', 'fold_groups_param', 'log_plots_param', 'exp_id', 'X_test'}
+2026-10-17 15:28:08,075:INFO:Checking environment
+2026-10-17 15:28:08,075:INFO:python_version: 3.9.25
+2026-10-17 15:28:08,075:INFO:python_build: ('main', 'Nov  3 2025 22:29:32')
+2026-10-17 15:28:08,075:INFO:machine: arm64
+2026-10-17 15:28:08,075:INFO:platform: macOS-26.3.1-arm64-arm-64bit
+2026-10-17 15:28:08,075:INFO:Memory: svmem(total=8589934592, available=1567244288, percent=81.8, used=3122315264, free=72482816, active=1513848832, inactive=1464451072, wired=1608466432)
+2026-10-17 15:28:08,075:INFO:Physical Core: 8
+2026-10-17 15:28:08,075:INFO:Logical Core: 8
+2026-10-17 15:28:08,075:INFO:Checking libraries
+2026-10-17 15:28:08,075:INFO:System:
+2026-10-17 15:28:08,075:INFO:    python: 3.9.25 (main, Nov  3 2025, 22:29:32)  [Clang 20.1.8 ]
+2026-10-17 15:28:08,075:INFO:executable: /opt/miniconda3/envs/py39/bin/python
+2026-10-17 15:28:08,075:INFO:   machine: macOS-26.3.1-arm64-arm-64bit
+2026-10-17 15:28:08,075:INFO:PyCaret required dependencies:
+2026-10-17 15:28:08,076:WARNING:/opt/miniconda3/envs/py39/lib/python3.9/site-packages/_distutils_hack/__init__.py:30: UserWarning: Setuptools is replacing distutils. Support for replacing an already imported distutils is deprecated. In the future, this condition will fail. Register concerns at https://github.com/pypa/setuptools/issues/new?template=distutils-deprecation.yml
+  warnings.warn(
+
