@@ -85,8 +85,8 @@
       <figure><a href="plots/part2_two_feature_marginalizations.jpg"><img src="plots/part2_two_feature_marginalizations.jpg" alt=""></a></figure>
       <figure><a href="plots/part2_three_feature_marginalizations.jpg"><img src="plots/part2_three_feature_marginalizations.jpg" alt=""></a></figure>
       <h3>Part 2 observations</h3>
-      <p>In 2D space all the combinations create clear clustering except for sepal length vs pedal width. In 3D space we see clearest clsutering when we comparing sepal length with pedal length and width and sepal width with pedal length and width. Otherwise the clustering is not as obvious.
-The sepration for setosa is always clearest while the boundaries for versicolor and virginica are much closer and harder to clearly identify which cluster the point belongs to.</p>
+      <p>In 2D space, all the combinations create clear clustering except for sepal length vs. petal width. In 3D space, we see the clearest clustering when comparing sepal length with petal length and width, and sepal width with petal length and width. Otherwise, the clustering is not as obvious.
+The separation for setosa is always clearest, while the boundaries for versicolor and virginica are much closer and harder to clearly identify which cluster the point belongs to.</p>
     </section>
 
     <section id="part3">
@@ -102,12 +102,12 @@ The sepration for setosa is always clearest while the boundaries for versicolor 
       </table></div>
       <figure><a href="plots/part3_pca_projections.jpg"><img src="plots/part3_pca_projections.jpg" alt=""></a></figure>
       <h3>Part 3 observations</h3>
-      <p>Just one PC is quite good at dividing up the data so we can clearly identify majority of cases with some issues arising at the versicolor/virginica boundary. This is further improved on by using 2 PCs where we can clearly see clustering with minimal boundary overlap. 3 PC's agruably looks slightly noisy.</p>
+      <p>Just one PC is quite good at dividing up the data, so we can clearly identify the majority of cases, with some issues arising at the versicolor/virginica boundary. This is further improved by using 2 PCs, where we can clearly see clustering with minimal boundary overlap. 3 PCs arguably look slightly noisy.</p>
     </section>
 
     <section id="part4">
       <h2>Part 4 — Data compression</h2>
-      <p>97.77% of our variance is explained by the first 2 PC's for our Iris Dataset. One PC explains 92.46% of the variance menaing we need just 1 PC to be able to explain at least 50% of the variance within the dataset.</p>
+      <p>97.77% of the variance is explained by the first 2 PCs in our Iris dataset. One PC explains 92.46% of the variance, meaning we need just 1 PC to be able to explain at least 50% of the variance within the dataset.</p>
     </section>
 
     <section id="part5">
@@ -132,8 +132,10 @@ The sepration for setosa is always clearest while the boundaries for versicolor 
         </tbody>
       </table></div>
       <figure><a href="plots/part5_mean_confusion_matrices.jpg"><img src="plots/part5_mean_confusion_matrices.jpg" alt=""></a></figure>
-      <h3>Part 5 comparison and conclusion</h3>
-      <p>When trying to evaluate each models ability to accurately classify the model I noticed one could beat the other if I jsut changed the seed so i used 10 different seeds and averaged them to get a final confusion matrix. The amtrix gives a slight edge to the PCA model which makes sense if we evaluate the graph visually for the 2D case. We can see that a green dot (virginica) get trasnpoed above all the yellow dots (versicolor). This shows a much more blended together boundary for versicolor and virignica which can make predicitions much harder to make. While the performance is very close in both models it is clear both visually and by performance that PCA does a better job of explaining variance and does not blend the signals together as much because of each PC's orthogonality.<br><br>In summary,  from the perspective of Data Compression it seems PCA preserves the boundaries better and from a perspective of classification this is confirmed by the slight outperformance over 10 sampled seeds.</p>
+      <h3>Part 5 comments</h3>
+      <p>PCA and ISOMAP take high-dimensional data and compress it into a lower-dimensional space. PCA does this by trying to explain the variance seen across variables and then re-centering and shifting the data such that the maximum explained variance factor is on each axis. In our 2D case, 97.77% of the variance is explained. ISOMAP tries to maintain the neighbourhood spacing using KNN and compress the data onto 2 axes in this case. While we don't see the exact amount of variance explained, we can see from the 2D plot that it is remarkably accurate, minus the one outlier green dot.</p>
+      <p>When trying to evaluate each model's ability to accurately classify the data, I noticed one could beat the other if I just changed the seed, so I used 10 different seeds and averaged them to get a final confusion matrix. The matrix gives a slight edge to the PCA model, which makes sense if we evaluate the graph visually for the 2D case. We can see that a green dot (virginica) gets transposed above all the yellow dots (versicolor). This shows a much more blended boundary for versicolor and virginica, which can make predictions much harder to make. While the performance is very close for both models, it is clear from both the visual results and the performance that PCA does a better job of explaining variance and does not blend the signals together as much because of each PC's orthogonality.</p>
+      <p>In summary, from the perspective of data compression, it seems PCA preserves the boundaries better as it converts the data to a lower-dimensional space. From a performance perspective, this is confirmed by its slight outperformance over 10 sampled seeds, although, to be highly confident, we may want to expand the experiment and use a larger dataset.</p>
     </section>
 
     <section id="files">
