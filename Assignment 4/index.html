@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SYDE 572 — Assignment 4 | Ethan Batiuk</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 18px; }
+    body { margin: 0; color: #222; background: #fff; font: 16px/1.65 Arial, Helvetica, sans-serif; }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 28px; }
+    a { color: #245484; text-underline-offset: 3px; }
+    a:focus-visible { outline: 2px solid #245484; outline-offset: 4px; }
+    header { padding: 32px 0 20px; border-bottom: 1px solid #ccc; }
+    h1 { margin: 0 0 4px; font-size: 28px; font-weight: 600; line-height: 1.3; }
+    header p { margin: 0; color: #555; }
+    nav { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 18px; font-size: 14px; }
+    main { padding: 4px 0 26px; }
+    section { padding: 26px 0; border-bottom: 1px solid #ddd; }
+    h2 { margin: 0 0 14px; font-size: 23px; font-weight: 600; }
+    p { margin: 0 0 14px; }
+    figure { max-width: 640px; margin: 20px auto; }
+    figure img { display: block; width: 100%; height: auto; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0 4px; }
+    .button { display: inline-block; padding: 7px 12px; border: 1px solid #aaa; border-radius: 3px; color: #245484; text-decoration: none; font-size: 14px; }
+    .button:hover { background: #f5f5f5; }
+    footer { padding: 24px 0; color: #555; font-size: 13px; }
+    @media (max-width: 700px) {
+      .wrap { padding: 0 18px; }
+      h1 { font-size: 25px; }
+      h2 { font-size: 21px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      @page { margin: 16mm; }
+      .wrap { max-width: none; padding: 0; }
+      nav, .actions { display: none; }
+      section { padding: 17px 0; }
+      figure { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap" id="top">
+    <h1>SYDE 572 — Assignment 4</h1>
+    <p>Ethan Batiuk</p>
+    <nav aria-label="Report sections">
+      <a href="../index.html">Course home</a>
+      <a href="#results">Results</a>
+      <a href="#discussion">Discussion</a>
+      <a href="#files">Notebook</a>
+    </nav>
+  </header>
+  <main class="wrap">
+    <section id="results">
+      <h2>Results</h2>
+      <p>test accuracy: 0.8153587914393622</p>
+      <p>test F1: 0.8046181172291297</p>
+      <figure><img src="confusion_matrix.png" alt=""></figure>
+    </section>
+    <section id="discussion">
+      <h2>Discussion</h2>
+      <p>Our overall Accuracy, F1 and Confusion matrix look quite good. We have reasonbaly high accuracy of above 80% in all cases. Our prediction skew is low as we roughly misclassify postivies equally likely to negatives which is great for generalizability.</p>
+      <p>Looking at some of the cases of misclassification such as the second review seen above, it talks about norton and uses a lot of words such as: like, wins, etc that would be common positive words but uses more obscure or likely unseen negative phrases like: hit and miss or memory hog. These combinations are likely much more rare so they would have lower probbailities to skew the classifier while seeing like would be a very common way to express positive thoughts. This is a similar case for all the other classifiers as well.</p>
+    </section>
+    <section id="files">
+      <h2>Notebook</h2>
+      <div class="actions"><a class="button" href="A4.ipynb" download="A4.ipynb">A4.ipynb</a><a class="button" href="../index.html">Course home</a></div>
+    </section>
+  </main>
+  <footer class="wrap">Ethan Batiuk · SYDE 572 · Assignment 4</footer>
+</body>
+</html>
